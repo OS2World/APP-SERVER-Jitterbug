@@ -1,0 +1,4 @@
+NAME jitterbug WINDOWCOMPAT
+DESCRIPTION '$@#egnite:1.6.2#@  Jitterbug for OS/2'
+PROTMODE
+SEGMENTS '_MSGSEG32' CLASS 'CODE'

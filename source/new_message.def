@@ -1,0 +1,4 @@
+NAME new_message WINDOWCOMPAT
+DESCRIPTION '$@#egnite:1.6.2#@  Jitterbug mailer for OS/2'
+PROTMODE
+SEGMENTS '_MSGSEG32' CLASS 'CODE'
