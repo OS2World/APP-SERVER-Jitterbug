@@ -1,0 +1,10 @@
+PATH=/bin:/usr/bin:/usr/local/bin:/usr/contrib/bin
+MAILDIR=$HOME/Mail
+DEFAULT=$HOME/InBox
+LOGFILE=$MAILDIR/procmail.log
+LOCKFILE=$HOME/.lockmail
+:0
+* ^Subject: CVS update:
+| $HOME/bin/new_message PACKAGE CVS
+:0 c
+| $HOME/bin/new_message PACKAGE incoming

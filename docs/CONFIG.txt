@@ -1,0 +1,318 @@
+This describes the JitterBug config file option. The config file is
+stored in the directory /etc/jitterbug/ and should be readable by the
+user that your web server runs as.
+
+The name of the config file is taken as the name of the cgi-bin binary
+that JitterBug is installed as. This allows you to have several
+different JitterBug pages on one site by using different cgi-bin names
+and different config files.
+
+Simple Example
+--------------
+
+A simple example config file is:
+
+  from address = rsync-bugs@samba.anu.edu.au
+  chroot directory = /usr/people/rsync-bugs/bug_tracking
+  base directory = /
+  guest gid = 65534
+  guest uid = 65534
+  uid = 1021
+  gid = 1005
+
+This is the one I use for rsync at http://samba.anu.edu.au/rsync/
+
+
+                          CONFIGRATION OPTIONS
+                          --------------------
+
+from address
+------------
+
+This is the address that mail from JitterBug will appear to come
+from. It is also the address that new bugs reports should be sent to. 
+
+
+chroot directory
+----------------
+
+This is the absolute path of the directory that JitterBug should
+chroot() to on startup. This is one as a security measure as it
+ensures that JitterBug cannot access any files outside the specified
+directory. You can avoid the chroot() by leaving out this line in the
+config file. 
+
+
+base directory
+--------------
+
+This is the directory that contains the JitterBug data files. The
+pathname is relative to the chroot directory if you have specified
+one. Normally base directory is set to /.
+
+base url
+--------
+
+This is the base URL you want to appear in emailed notifications. If
+you set this then JitterBug will supply a complete URL that points
+directly at the message, allowing users to view the message with one
+click from their mail program. The url will be constructed from this
+URL with ?findid=PRNUM appended.
+
+guest gid, guest uid
+--------------------
+
+These options specify the uid/gid that JitterBug should use when a
+guest connection is made. This uid/gid pair should have minimal
+privileges.
+
+uid, gid
+--------
+
+These options specify the uid/gid that JitterBug should use when a
+non-guest connection is made. This uid/gid pair should have write
+permission in the data directory.
+
+You must use the numeric form of the uid and gid.
+
+incoming
+--------
+
+This is the default directory which new files are placed into when
+processed by new_message. It defaults to "incoming".
+
+
+mailer
+------
+
+Normally JitterBug uses an internal SMTP mailer for sending mail. You
+can force it to instead use an external mailer by specifying the
+"mailer" option. This should be the full path (relative to the
+chrooted directory) of a mailer that accepts mail on standard input. 
+
+To use sendmail as your mailer you may wish to use the option
+   mailer = /usr/sbin/sendmail -oi -oem -t
+
+The main reason for using the mailer option is if the internal mailer
+in JitterBug fails to work correctly. This may happen because it is
+very fussy and does not handle a wide range of SMTP server responses. 
+
+If you do use a external mailer and run JitterBug with the chroot
+option then you will need to setup libraries, devices and config files
+for your mailer in the chrooted area.
+
+
+smtp address
+------------
+
+If using the internal mailer (ie. you have not set the "mailer"
+option) then this specifies the IP address of the SMTP server you wish
+to use for delivery. You normally don't need to specify this as the
+default of "127.0.0.1" is correct in most situations.
+
+
+title
+-----
+
+This sets the title shown at the top of the JitterBug web pages. It
+defaults to "JitterBug".
+
+
+auth user
+---------
+
+This sets the username that must be entered for authentication to be
+accepted from your web server. Normally you can leave this option out
+and JitterBug will accept any user that your web server
+authenticates. 
+
+
+display binary
+--------------
+
+Normally JitterBug replaces any binary characters in emails with a
+full-stop. This is to prevent browsers from getting very confused with
+some binary characters. JitterBug decides whether a character is
+binary using your systems isprint() macro. For some languages/systems
+you will find that this prevents you from properly displaying local
+character sets. In that case set "display binary = yes" and you will
+see all characters.
+
+
+background
+----------
+
+JitterBug normally puts a default background image on each web
+page. This can be overridden with solid colour backgrounds in each
+users preferences page or you can override it in the config file by
+specifying a different background image. It defaults to
+"/images/back.gif" 
+
+
+group authentication
+--------------------
+
+If you use the group authentication features in your web server
+(apache can do this) then you may wish to set "group authentication =
+yes" in your config file. This tell JitterBug to skip the login page
+and use the username supplied by your web server. Note that the
+username must already exist within JitterBug and that if it doesn't
+then the normal login page is shown.
+
+
+search program
+--------------
+
+Normally the searching in JitterBug is done using internal regular
+expression routines. If you have lot of messages in the system then
+this gets too slow and you will need to specify a fast external search
+program that uses a pre-built index. For example, you can use glimpse
+by specifying
+
+   search program = /usr/bin/glimpse -wyli -H /path/to/data/directory -e 
+
+You will also need to setup a cron job to automatically reindex the
+data at regular intervals. 
+
+Note that if you specify a search program and use the chroot option
+then you will need to setup appropriate libraries, devices etc for it
+to use in the chrooted area.
+
+
+gzip path
+---------
+
+When users enable "gzip encoding" in their preferences page JitterBug
+needs to launch gzip to compress all pages being sent. The default
+path is /usr/bin/gzip. If this isn't correct then use the gzip path
+option to specify the path to a local version of gzip. Make sure this
+path is valid in the chrooted directory.
+
+
+forward all
+-----------
+
+You can set "forward all" to a comma separated list of email addresses
+that should receive copies of all messages entering the
+system. new_message will forward incoming messages to these addresses
+after adding the PR# to the subject line and setting the bug tracking
+reply address in the CC line.
+
+forward public
+--------------
+
+"forward public" is like "forward all" except that messges that are
+marked as PRIVATE are not forwarded.
+
+reply strings
+-------------
+
+When a message arrives it is scanned for a PR#. If a PR# is found then
+normally the message is appended as a followup to the existing
+message. If reply strings is set then the From address in the followup
+is checked against each of the reply strings and if a reply string is
+found as a substring of the From then the message is treated as a
+reply not a followup. This is useful in combination with the "forward
+all" code.
+
+
+guest download
+--------------
+
+Normally JitterBug does not allow file download for guest users. You
+can enable file download for guests by setting "guest download = yes"
+
+gzip download
+-------------
+
+If this is enabled with "gzip download = yes" then all guest downloads
+will be gzipped regardless of the setting of the guest gzip encoding
+preference. 
+
+
+pr identifier
+-------------
+Some sites may be running many JitterBugs.  This option allows the 'PR#'
+string to be set to something else, i.e NUM#, or BUG#.
+
+
+                           OTHER FILES
+                           -----------
+
+This section lists the various files used by JitterBug. Some of these
+are automatically generated by JitterBug and others must be hand
+edited to reflect your local configuration. Most list in the base
+directory as specified in your config file.
+
+users
+	This file contains the list of JitterBug users on your
+	system. It is updated automatically by the "create user"
+	action.
+
+system.audit
+	This file is where system actions (such as logging in or
+	creating users) are logged. If you want guest logins to be
+	logged then this file must be writeable by both the guest and
+	non-guest uids.
+
+autoreply.txt
+	If this file exists then any new messages arriving in the
+	"incoming" directory when processed by new_message will
+	automatically generate a reply message with this file as the
+	message body. You would typically use this for a "thanks for
+	your bug report style message". A sample script for
+	automatically generating this file from your current FAQ list
+	is supplied in the source directory. You may wish to call this
+	script from cron.
+
+	If the string %PRNUM% appears in this file then the message id
+	is subsitutued. This is useful for somehting like:
+
+	   please see http://my.host/package?findid=%PRNUM%
+
+	which allows users to click on the supplied URL to see
+	progress on the message.
+
+	JitterBug won't send an autoreply if the subject of the
+	message starts with "Re:".
+
+intro.html
+	This contains the basic welcome screen you wish to display to
+	non-guest users. Put in any html you like.
+
+guestintro.html
+	This contains the basic welcome screen you wish to display to
+	guest users. Put in any html you like.
+
+footer.html
+	This file is inserted at the bottom of every JitterBug
+	page. You may wish to put a contact email address or similar
+	in here.
+
+header.html
+	If this file exists then it will be put at the top of each
+	page displayed instead of the automatically generated
+	headers. This is useful if you don't like the default layout
+	of JitterBug and want to change it a lot. For example, several
+	sites use header.html to enclose the whole of JitterBug in a
+	table and place a border around the table with a logo.
+
+.nextid
+	This file contains the net message id the system will
+	assign. It is automatically generated.
+
+.faq/
+	This directory is where JitterBug places FAQ entries as you
+	create them. The file names in the directory are the FAQ
+	titles. 
+
+*.prefs
+	These files contain the preferences of individual users. Don't
+	edit by hand, instead use the preferences page.
+
+reportform.html
+	This file contains the "bug submission" form you wish to use
+	for your package. It can contain anything you like, but make
+	sure you name any form variables starting with opt_ otherwise
+	they won't get processed by JitterBug.
+

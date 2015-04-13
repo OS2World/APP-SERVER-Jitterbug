@@ -1,0 +1,227 @@
+INSTALLING Jitterbug
+--------------------
+
+This file explains how to set up a basic installation of Jitterbug.
+You will need to be owner of the web daemon to setup Jitterbug, and
+root to install the binary. You will also probably want to add a mail
+alias for your system, since Jitterbug reports are ordinary mail
+messages. Some hints about doing this are in the mail subdirectory,
+but they are far from complete and will need to be modified or
+replaced to do anything useful.
+
+NOTE: In the following I have used as an example the setting up of
+JitterBug page for a mythical PACKAGE bug-tracking system. Please
+replace PACKAGE in all the following with whatever you want to call
+your site. Using different names allows you to setup several JitterBug
+sites on one machine.
+
+Also note that the following instructions describe the "standard" way
+to setup JitterBug. There are in fact several different ways to do it
+each with their own advantges and disadvantages. See the
+"ALTERNATIVES" section at the end for more info.
+
+1) Create an account for JitterBug to run in. This isn't strictly
+necessary but is the simplest thing to do. I often create an account
+called PACKAGE-bugs. This means that new bug reports
+enter the system by mailing to PACKAGE-bugs@your.host.name
+
+2) unpack the jitterbug sources somewhere. If you have CVS then it may
+be a good idea to fetch the sources via anonymous CVS as this will
+allow you to trivailly update them to the latest version at any time
+by running "cvs update -d" in the jitterbug directory. See
+http://samba.anu.edu.au/cvs.html for details.
+
+3) Go to the source directory and run ./configure 
+This is an autoconf script, and should pick a reasonable set of
+defaults for your system. You may also want to edit jconfig.h, but
+most sites won't need to.
+
+4) type 'make' to build the binaries.
+
+5) Create a directory where the JitterBug data files will live. This
+must be owned by the account created in step 1. The directory is
+normally outside your normal public HTML area. For example, I normally
+create a ~PACKAGE-bugs/bug_tracking/ directory.
+
+6) Set up secure access to the jitterbug binary through your web
+server. I normally only setup authentication for PACKAGE.private and
+leave out authentication for PACKAGE. This way you will have a public
+interface called PACKAGE and a private interface called
+PACKAGE.private. To do this under Apache edit the file access.conf
+like this:
+
+	<Location /cgi-bin/PACKAGE.private>
+	AuthType Basic
+	AuthName PACKAGE
+	AuthUserFile /etc/httpd/auth/apache.auth
+	<Limit GET POST>
+	require user PACKAGE
+	</Limit>
+	</Location>
+
+Then you follow the Apache documentation for the process of setting up
+apache.auth. If you don't want to have 'cgi-bin' appear in the URL you can 
+specify something like this in the Apache file srm.conf:
+	
+	ScriptAlias /PACKAGE /data/httpd/cgi-bin/PACKAGE
+
+Have a look at the existing ScriptAlias entry for cgi-bin first.  You
+will need to restart apache (or send it a USR1 signal) for these
+changes to take effect.
+
+7) Set up some initial files in the Jitterbug area. Start by copying the
+files in config/* to the directory you created in step 5. 
+
+8) Copy the jitterbug binary to the cgi-bin directory of your web
+daemon. In Apache this is defined by 'ScriptAlias' in srm.conf.  You
+should name the binary PACKAGE and PACKAGE.private. The two binaries
+should be identical. (a hard or soft link will do nicely).
+
+9) Make the permissions on the jitterbug binaries "-rws--x---". The
+binaries must be owned by user root. The group of the binary must
+be the group that your web server runs as. You have to have root 
+access to set this up.
+
+On most unixes the commands to achieve this will be:
+        chown root.nobody PACKAGE PACKAGE.private
+	chmod 04710 PACKAGE PACKAGE.private
+
+assuming that "nobody" is the group your web server runs as.
+
+The reason that jitterbug should be installed setuid root is to allow it
+to use chroot() to limit access to files and to use setuid() and
+setgid() to change uid/gid. The first thing jitterbug does after
+starting up is to do the chroot() and lose root privilages. This is
+done before any processing begins. 
+
+Be very careful that these binaries can only be run by your web
+server. If an ordinary user can run these binaries (because you setup
+the permissions incorrectly) then that user may be able to gain root
+access. 
+
+Note: it can be run without being setuid root. See the ALTERNATIVES
+section below.
+
+10) create a directory called /etc/jitterbug/. Then create a file
+called /etc/jitterbug/PACKAGE. This file is your JitterBug config
+file for PACKAGE. A simple config file would be:
+
+    from address = PACKAGE-bugs@your.host.name
+    chroot directory = /home/PACKAGE-bugs/bug_tracking
+    base directory = /
+    guest gid = 65534
+    guest uid = 65534
+    uid = XXXX
+    gid = YYYY
+
+You must set uid/gid to those of the account you created in step 1.
+Set "guest uid" and "guest gid" to an account with minimal privileges
+(such as the nobody account) or to an unused uid/gid pair.
+
+There are lots of other options you can set in this config file. See
+the rest of the docs for details.
+
+11) copy /etc/jitterbug/PACKAGE to /etc/jitterbug/PACKAGE.private or
+make a symbolic link.
+
+12) Connect to http://your.server/cgi-bin/PACKAGE. You should get the
+JitterBug guest interface.
+
+13) Connect to http://your.server/cgi-bin/PACKAGE.private. The web
+server should first prompt you for a user name and password. You
+should then be able to create a new user. 
+
+Please note that JitterBug itself does not contain any authentication
+code. The username/password prompt is being generated by your web
+server. If you have authentication problems then see your web server
+documentation. 
+
+14) Copy the new_message binary to a directory where it will be
+accessible by mail scripts. The usual location would be $HOME/bin/
+in the account of the user you setup in step 1. The new_message binary
+should not be setuid.
+
+15) Add a mail alias and scripts so that new messages arrive in an
+appropriate directory in Jitterbug. In the simplest case this would just
+be a .forward file containing:
+
+	"|/path/to/new_message PACKAGE"
+
+(the quotes are important).
+
+In more complex cases you may wish to use procmail. 
+
+The new_message program accepts a single mail message on standard
+input and examines it to see if it is a reply to an existing message
+in the system. If it is then the message is processed as a
+followup. Otherwise a new problem report number is assigned and the
+message is placed in the incoming directory. 
+
+new_message should be run by your mailer with a uid/gid which has
+write permission in the base directory. This will happen automatically
+if you have setup a jitterbug user as recommended in step 1 and you
+use a .forward file.
+
+16) Customise the files that were copied from the config directory to
+your data directory in step 7. The main files that need customising
+are intro.html, guestintro.html, footer.html and reportform.html.
+
+If you have problems then look at
+http://samba.anu.edu.au/cgi-bin/jitterbug. Maybe someone has reported something
+similar, or perhaps after you have checked the documentation again and looked
+through the jitterbug system you may like to submit your own bug report.
+
+
+ALTERNATIVES
+------------
+
+It is possible to setup JitterBug in many ways. For example, you can
+avoid the chroot() by setting "base directory" to your data directory
+and removing the "chroot directory" config line. This may allow you to
+get JitterBug working on systems such as Solaris where it is difficult
+to make socket calls in a chrooted environment.
+
+You can also also avoid making the binaries setuid-root by not using
+chroot and setting the "guest uid" and "guest gid" to those of your
+web server. You will need to make PACKAGE.private setuid/setgid to the
+uid/gid of the account that you created in step 1, or you can even
+avoid that by setting uid/gid to those of your web server. 
+
+Using either of these two alternatives changes the security
+implications of JitterBug. If it is not run setuid-root then it can't
+chroot() which means that if a bug is discovered in JitterBug then
+access to files outside the data directory may be possible. You have
+to weigh up this risk against the risk that a local user manages to
+run the jitterbug binary from outside the web server. 
+
+
+CONFIG FILE
+-----------
+
+A more complete description of each option in the JitterBug config
+file is given in CONFIG.txt
+
+
+SOLARIS
+-------
+
+If you are running JitterBug under Solaris and use the chroot option
+and use the internal mailer then you will need a bunch of
+device/config files in the chroot directory to enable socket calls
+to be used. The following commands may help:
+
+   mkdir dev
+   mknod dev/tcp c 11 42
+   chmod a+rw dev/tcp
+   mknod dev/conslog c 11 42
+   chmod a+rw dev/conslog
+   mkdir etc
+   cp /etc/netconfig etc/netconfig
+
+You may also like to set your chroot directory to one level above your
+base directory so the dev and etc directories don't appear inside
+JitterBug. For example, you could set:
+
+	chroot directory = /home/PACKAGE-bugs
+	base directory = /bug_tracking
+

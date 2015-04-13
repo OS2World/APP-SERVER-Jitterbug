@@ -1,0 +1,192 @@
+JitterBug 1.5
+-------------
+
+This file describes the basic usage of JitterBug and what all the
+different fields are for. The documentation is by no means complete
+but it should be enough to get new users going.
+
+It is *highly* recommended that you read both this file and all of
+CONFIG.txt. 
+
+
+Login Screen
+------------
+
+The first screen (ie. web page) you see when you connect to JitterBug
+is the login screen. If you are connecting as a guest user then this
+screen is automatically bypassed and you are taken straight to the
+main screen. This screen is also bypassed if you use the "group
+authentication" option.
+
+At the login screen you should select your JitterBug username from the
+supplied list and press "Enter System". 
+
+If you do not have a username yet then enter the username you want in
+the space provided and press "Create User". After that your new
+username should appear in the supplied list.
+
+The first time a new user enters the system they will be required to
+fill out their user preferences in the preferences screen.
+
+The login screen is also displayed as the bottom pane of the main
+screen. This allows you to change user easily. You can also edit your
+user preferences and view the system audit trail.
+
+
+Main Screen
+-----------
+
+The main screen is divided into 4 panes. 
+
+The top pane is the introduction. It is based on intro.html or
+guestintro.html depending on whether you are connected as a guest user
+or not. Often these will be setup to contain links to related
+resources.
+
+The next pane is the search pane. You can select search criterion here
+and press "Select Messages". This affects what messages are displayed
+in the directory list pane. See the section on searching for more
+details.
+
+The directory list pane is next. This contains a list of the
+directories containing all the messages in the system. Next to each
+directory the number of messages that match the current search
+criterion is displayed. To look at the messages in a directory click
+on the directory name. You can also create a new directory by entering
+its name and pressing "Create".
+
+The login pane is next. See the description of the login screen above.
+
+
+Directory View
+--------------
+
+The directory view screen shows you the messages in the selected
+directory matching the current search criterion. You can page through
+the messages using the "next", "prev", "first" and "last" links. The
+number of messages displayed per page is customisable in the user
+preferences page.
+
+At the top of the directory view there are links to all the other
+directories in the system. This is useful for jumping between
+directories.
+
+Below this the search pane appears with the same options as the search
+pane on the main screen. Changes to the search criterion are carried
+over between screens.
+
+The messages themselves are shown in 3 columns. The first column shows
+the message id and the number of replies and followups for that
+message. Clicking on the message id takes you to the message view
+screen for that message.
+
+The 2nd column gives the subject, sender and date of the message.  The
+3rd column allows you to move the message to another directory. You
+can move several messages at once. When you have finished selecting
+movements click on "Submit Changes".
+
+The "Notification" field allows you to select who will receive
+notification when something changes in this directory. See the
+nofification section for details.
+
+
+Message View
+------------
+
+The message view screen views the contents of one message. The initial
+message plus any replies and followups are shown, along with any
+message notes.
+
+From this screen you can change the notes attached to the message, move
+the message to another directory or reply to the message. You can also
+edit the notifcation list for this message, allowing you to track
+changes to the message.
+
+The "View Audit Trail" button allows you to view changes that have
+been made to the message since it arrived. 
+
+
+Compose Screen
+--------------
+
+The compose screen is used to compose a reply to a message. You can
+change the various mail headers and quote sections of the original
+message.
+
+You can also load a previous written FAQ answer or create a new FAQ
+answer. 
+
+When you have finished composing the reply press "Send" and the reply
+is sent. Your signature is added if you selected the signature
+checkbox.
+
+
+Preferences Screen
+------------------
+
+The only obligatory fields in the preferences screen are the full name
+and email address. The other fields are optional and should be
+experimented with for best results. 
+
+
+Replies and Followups
+---------------------
+
+A reply is a message that has been sent from JitterBug to answer an
+incoming message. 
+
+A followup is a reply to a reply. Followups are created when a user
+sends a email reply to a JitterBug generated message. Followups are
+detected by looking for the PR# automatically added to the subject
+line in replies.
+
+
+Notification
+------------
+
+You can ask JitterBug to notify you automatically via email when
+certain actions happen. There are two types of notification lists, one
+for directories and one for messages.
+
+Notifications will be sent to the email address specified in your user
+preferences. Notifications are sent for message movements, incoming
+messages or changes to the notes on a message.
+
+Notifications are not sent for actions that you peform yourself.
+
+The names you specify in the notification list can either be JitterBug
+usernames or email addresses. You can specify as many as you like in a
+comma separated list.
+
+Searching
+---------
+
+The search pane allows you to select messages using a regular
+expression string search and by looking for particular message
+attributes. The regular expression is applies to the full message and
+any replies, followups or notes. It can be case sensitive or
+case-insensitive. 
+
+The message type radio buttons allow you to select what sort of
+messages you want. The only option that really needs explanation there
+is the "pending" option. A pending message is one where the date on
+the last followup is later than both the last reply and the last
+change to the message notes.
+
+
+FAQ Handling
+------------
+
+JitterBug maintains a list of FAQ replies. When you have composed a
+reply that you think you will need again then before you press send
+you should type in a name for the FAQ in the space provided and press
+create. The text of your reply will be added as a FAQ. You can then
+press send.
+
+When you next are replying to a message and you wish to use a
+previously created FAQ then select the FAQ from the drop down list
+provided and press load. You can then add any extra comments you wish
+and press send.
+
+You can update a FAQ entry by using the save button after loading
+it. The current contents of the message window will replace the FAQ.

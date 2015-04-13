@@ -1,0 +1,22 @@
+Jitterbug Mail Processing
+-------------------------
+
+This directory contains an example of how to get JitterBug to place
+different incoming messages into different JitterBug directories.
+
+If you just want all messages to go into an "incoming" directory then
+just use a .forward file of
+
+	"|/path/to/new_message PACKAGE"
+
+(the quotes are important)
+
+To do something fancier you can use procmail to select what messages
+go where. Copy the sample forward file to ~/.forward and the
+procmailrc file to ~/.procmailrc. Edit to suit.
+
+The new_message program takes an optional second argument which
+specifies which JitterBug directory to put messages in. In the example
+given in procmailrc CVS commit messages are automatically put into the
+CVS JitterBug directory.
+

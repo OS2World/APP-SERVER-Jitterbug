@@ -1,0 +1,167 @@
+README for OS/2 Port of Jitterbug 1.6.2
+---------------------------------------
+
+Warning!
+--------
+
+This port is a miserable hack, compiled with
+IBM VisualAge C++ for OS/2, Version 3. It has
+not even been tested very well.
+
+
+What is Jitterbug?
+------------------
+
+See http://samba.anu.edu.au/jitterbug/
+
+
+What do I need to run Jitterbug on OS/2?
+----------------------------------------
+
+You need Apache (I'm running 1.3.9). And you
+need any SMTP server (mine is IBM OS/2 Sendmail
+Version 2.03).
+
+Of cause you need OS/2, TCP/IP and a Webbrowser.
+I used Netscape 2.02 and 4.61 and Hotjava 3.0.
+
+It may be helpful to have an IBM VisualAge C++
+compiler and the TCP/IP toolkit.
+
+At least, Jitterbug will not run on 8.3
+filesystems. You need HPFS, JFS or whatever
+may support long filenames.
+
+
+Can I modify and recompile the code?
+------------------------------------
+
+Did anybody say 'caaaan'? Be prepared, that you
+have to. I included my Makefile. If you make sure,
+that your compiler finds all TCP/IP include files,
+it should compile without problems. However, lots
+of warnings will be produced. You probably need
+to modify the two .bnd files.
+
+
+How do I get help?
+------------------
+
+Check http://samba.anu.edu.au/cgi-bin/jitterbug first,
+but do not expect any help on this OS/2 port. Check
+the source code next.
+
+
+Why was this awful port done?
+-----------------------------
+
+Well...I was looking around the net for some bug
+tracking tools, found Jitterbug but wasn't able
+to find any OS/2 port.
+
+
+Why was this port done that bad?
+--------------------------------
+
+It may have been much easier using GCC and EMX,
+but I'm used to the IBM compiler and there's no
+GCC installed around here. I checked the code and
+made up my mind. Should be easily done in a few
+hours - I thought. Harharhar...
+
+After a few hours I pulled my hair again and again.
+Da#&% m=%$õ(f%ck$ng sh&õ! After adding some more code
+stolen elsewhere, it compiled OK, but nothing worked.
+
+After some hours more than just a few, I solved some
+more porting problems and gave up with others, like
+chroot. At least I must say that this beast is not
+as portable as I expected.
+
+
+Are there any special considerations for this OS/2 port?
+--------------------------------------------------------
+
+Yes, quite some.
+
+The configuration file should be placed in /etc/jitterbug,
+sharing the same drive as your cgi-bin directory. The
+filename extension must be '.cfg'. The basename is the
+name of your PACKAGE, like in the original UNIX version.
+And, like with UNIX, change the name of jitterbug.exe
+to PACKAGE.exe. If you don't know what I'm talking about,
+please read the original documentation first.
+
+Leave the 'chroot directory' empty. Here is my PACKAGE.cfg:
+
+    from address = jnce-bugs@egnite.de
+    chroot directory =
+    base directory = /bugtrack/jnce
+    guest gid = 65534
+    guest uid = 65534
+    uid = 1
+    gid = 1
+    guest download = yes
+
+The directory /bugtrack/jnce keeps all the stuff needed:
+
+    footer.html
+    guest.prefs
+    guestintro.html
+    header.html
+    intro.html
+    reportform.html
+    users
+
+If you ever manage to get it working, Jitterbug will
+create more files and subdirectories here.
+
+You can't use "gzip encoding", because I commented out
+that part.
+
+External mailers may not work.
+
+For the programmers among you: I didn't use autoconf, awk
+and all that script stuff of the original version. So all
+modifications are crafted by hand. :-)
+
+
+Any more hints?
+---------------
+
+You won't be able to see the full thing unless you are
+logged in as a user (not guest) via you Webbrowser.
+After being logged in as a user other than guest, you
+have to set your preferences first.
+
+It looks like something is broken with the user name
+supplied by Apache, but not sure yet.
+
+Most problems I encountered while porting were based
+on the fact, that the program does not only jump around
+in subdirectories, but also modifies pathnames all
+the way long. Sigh!
+
+IBM's TCP/IP does not support read() and write() on
+socket handles (but my toolkit is not up to date).
+
+
+Will this be supported in the future?
+-------------------------------------
+
+I'm not sure, if I'll ever continue with this, because
+I'm not sure right now, if I really need this. My son
+already wrote some perl scripts, which our company is
+using right now.
+
+Anyway, if you are going to use it, let me know.
+
+
+harald.kipp@egnite.de
+
+*
+* $Log: README.OS2,v $
+* Revision 1.1  2000/04/25 20:01:12  harald
+* First OS/2 release
+*
+*

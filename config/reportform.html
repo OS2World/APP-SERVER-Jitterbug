@@ -1,0 +1,51 @@
+<H2>Sample JitterBug bug report submission</H2>
+
+<p><b> NOTE: You need to customise this form for your own
+purposes. Edit the file reportform.html in the data
+directory. Additional Form variables used in this form should start
+with opt_ for them to be automatically processed by JitterBug. You can
+have as many form variables as you like of any type you like. See a
+HTML book for details. </b><p>
+
+<b>The only form variables that must be included are 'from', 'subject'
+and 'body'. The others shown below are optional.</b> <p>
+
+Note that when users submit messages via this form that the messages
+are submitted via email into the system. This means they don't show up
+in incoming immediately, they will show up when your mailer has
+processed them (usually less than a minute unless you have a very slow
+mailer). <p>
+
+
+Please fill out the following fields as accurately as you can. Once
+you submit your bug report it will be added to the end of the incoming
+area.<p>
+
+If you mark the message private then it will only be viewable by the
+PACKAGE developers. Please do this if you include any confidential information
+about your company. <p>
+
+<table border=0>
+<tr><td>Your email address: </td><td><input type=text size=40 name=from></td></tr>
+<tr><td>Subject: </td><td><input type=text size=40 name=subject></td></tr>
+
+<tr><td>Your full name: </td><td><input type=text size=40 name="opt_Full_Name"></td></tr>
+<tr><td>PACKAGE version: </td><td><input type=text size=20 name="opt_Version"></td></tr>
+<tr><td>OS you are using: </td><td><input type=text size=20 name="opt_OS"></td></tr>
+
+
+<tr><td>Private message? </td>
+<td><input type=radio name=private value=1>yes&nbsp;
+ <input type=radio name=private value=0 CHECKED>no</td>
+</table>
+<br><input type=submit name=sendbugreport Value="Submit Bug Report">
+<input type=submit name=abort Value=abort><br>
+
+Please describe the problem clearly in the area below. If possible,
+include precise instructions on how to reproduce the problem.<p>
+
+If any other bug reports in the system are relevant then please give
+the bug report numbers<p>
+
+<br><textarea name=body rows=15 cols=85></textarea><br>
+

@@ -1,0 +1,33 @@
+README for Jitterbug
+--------------------
+
+JitterBug - where do you want to dance today?
+
+JitterBug is a cgi-bin tool for problem reporting and tracking developed
+by Andrew Tridgell for the Samba Team. Samba (see http://samba.anu.edu.au)
+generates a huge amount of incoming mail, being a mixture of bug reports,
+suggestions, complaints and even compliments! 
+
+JitterBug is distributed under the GNU Public Licence (see the file
+COPYING in the same directory as this README file) without any warranties.
+We have tried to make it as useful and secure as possible, but there are 
+undoubtably some bugs lurking in here. 
+
+To run JitterBug you need:
+
+	- Some kind of vaguely Unix-like operating system. Ports to 
+	  others should be quite easy, but haven't been done yet.
+
+	- Ability to configure the web daemon and chmod +s one file.
+	  You don't need to be root to administer Jitterbug once it is
+	  set up only to get it installed. (note: it is possible to
+	  run JitterBug without this but it is less secure!)
+
+If you want to see some examples of what JitterBug can do then have a
+look at http://samba.anu.edu.au/cgi-bin/jitterbug
+
+Now go to the doc directory and read INSTALL.
+
+Regards
+
+The Samba Team
